@@ -2,6 +2,7 @@ import argparse
 from enum import Enum
 import json
 import os
+import signal
 import time
 
 from marshmallow import Schema, fields, post_load
@@ -26,7 +27,7 @@ class BackupDestinationService:
         dest_folder_secrets_to_ids = BackupDestinationService._map_folder_secrets_to_folder_ids(self.destination_api)
 
         dest_local_storage = self.destination_api.get_local_storage()
-        dest_local_storage.custom_folder_names = {}
+        dest_local_storage_change = False
 
         source_username = source_api.get_user_identity().username
         source_folders = source_api.get_sync_folders()
@@ -66,10 +67,15 @@ class BackupDestinationService:
                             print('Error', new_folder_name, secret[0:4])
                             print(e)
 
-                    if secret in dest_folder_secrets_to_ids:
+                    if secret in dest_folder_secrets_to_ids and (
+                            dest_folder_secrets_to_ids[secret] not in dest_local_storage.custom_folder_names or
+                            dest_local_storage.custom_folder_names[dest_folder_secrets_to_ids[secret]] != new_folder_name
+                        ):
                         dest_local_storage.custom_folder_names[dest_folder_secrets_to_ids[secret]] = new_folder_name
+                        dest_local_storage_change = True
 
-        self.destination_api.set_local_storage(dest_local_storage)
+        if dest_local_storage_change:
+            self.destination_api.set_local_storage(dest_local_storage)
 
     @staticmethod
     def _map_folder_secrets_to_folder_ids(api_client: resilio_api.ResilioSyncAPI):
@@ -89,18 +95,20 @@ class BackupSyncService:
         for service in self.services:
             service.update_sources()
 
+def signal_handler(signal, frame):
+    print('\nterminating...')
+    exit(0)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Sync folders from one user to another')
     parser.add_argument('config', type=str)
-    
     args = parser.parse_args()
+
+    signal.signal(signal.SIGINT, signal_handler)
+
     with open(args.config, 'r') as f:
         config = backup_sync_schema.BackupSyncConfigSchema().load(json.load(f))
         while True:
             service = BackupSyncService(config=config)
             service.update_destinations()
             time.sleep(30)
-
-# todo sleep and auto query sources for folder changes (every minute?)
-# todo create docker container and run on intances
