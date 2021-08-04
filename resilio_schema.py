@@ -141,13 +141,13 @@ class LocalStorageStatusPanelSchema(BaseSchema):
 class LocalStorageSchema(BaseSchema):
     active_tab = fields.Str(data_key='activeTab')
     custom_folder_names = fields.Dict(data_key='customFolderNames', required=False, keys=fields.Str(), values=fields.Str())
-    first_run_tips = fields.Nested(LocalStorageFirstRunTipsSchema, data_key='firstRunTips')
+    first_run_tips = fields.Nested(LocalStorageFirstRunTipsSchema, data_key='firstRunTips', required=False)
     folder_share_options = fields.Dict(data_key='folderShareOptions', required=False)
-    folders_added = fields.Bool(data_key='foldersAdded')
-    has_been_pro = fields.Bool(data_key='hasBeenPro')
+    folders_added = fields.Bool(data_key='foldersAdded', required=False)
+    has_been_pro = fields.Bool(data_key='hasBeenPro', required=False)
     hidden_devices = fields.List(fields.Str, data_key='hiddenDevices', required=False)
-    status_panel = fields.Nested(LocalStorageStatusPanelSchema, data_key='statusPanel')
-    tab_index = fields.Str(data_key='tabIndex')
+    status_panel = fields.Nested(LocalStorageStatusPanelSchema, data_key='statusPanel', required=False)
+    tab_index = fields.Str(data_key='tabIndex', required=False)
 
     @post_load
     def make_object(self, data, **kwargs):

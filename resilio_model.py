@@ -127,13 +127,13 @@ class LocalStorage:
                  *,
                  active_tab: str,
                  custom_folder_names: typing.Optional[typing.Dict[str, str]] = {},
-                 first_run_tips: LocalStorageFirstRunTips,
+                 first_run_tips: typing.Optional[LocalStorageFirstRunTips] = None,
                  folder_share_options: typing.Optional[typing.Dict] = {},
-                 folders_added: bool,
-                 has_been_pro: bool,
+                 folders_added: typing.Optional[bool] = None,
+                 has_been_pro: typing.Optional[bool] = None,
                  hidden_devices: typing.List[str] = [],
-                 status_panel: LocalStorageStatusPanel,
-                 tab_index: str
+                 status_panel: typing.Optional[LocalStorageStatusPanel] = None,
+                 tab_index: typing.Optional[str] = None
                  ) -> None:
         self.active_tab = active_tab
         self.custom_folder_names = custom_folder_names
