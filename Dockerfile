@@ -7,6 +7,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-VOLUME config
+VOLUME /config
 
 CMD [ "python", "./backup_sync_service.py", "/config/config.json"]
