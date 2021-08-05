@@ -92,7 +92,12 @@ class BackupSyncService:
 
     def update_destinations(self) -> None:
         for service in self.services:
-            service.update_sources()
+            try:
+                service.update_sources()
+                print(f'updated {service.config.destination.connection_info.host}')
+            except Exception as e:
+                print(e)
+
 
 def signal_handler(signal, frame):
     print('\nterminating...')
