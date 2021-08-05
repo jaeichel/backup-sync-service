@@ -74,8 +74,7 @@ class BackupDestinationService:
                         dest_local_storage.custom_folder_names[dest_folder_secrets_to_ids[secret]] = new_folder_name
                         dest_local_storage_change = True
 
-        if dest_local_storage_change:
-            self.destination_api.set_local_storage(dest_local_storage)
+        self.destination_api.set_local_storage(dest_local_storage)
 
     @staticmethod
     def _map_folder_secrets_to_folder_ids(api_client: resilio_api.ResilioSyncAPI):
