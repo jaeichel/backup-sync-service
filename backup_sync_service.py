@@ -91,9 +91,24 @@ class BackupDestinationService:
 class BackupSyncService:
     def __init__(self, *, config: backup_sync_model.BackupSyncConfig) -> None:
         self.config = config
-        self.services = [BackupDestinationService(config=service_config) for service_config in config.services]
+        self.pending_service_configs = config.services
+        self.services = []
+
+    def _init_services(self) -> None:
+        pending_service_configs = []
+        for service_config in self.pending_service_configs:
+            try:
+                service = BackupDestinationService(config=service_config)
+                self.services.append(service)
+            except Exception as e:
+                print('Error', f'could not init {service_config.destination.connection_info.host}')
+                print(e)
+                pending_service_configs.append(service_config)
+        self.pending_service_configs = pending_service_configs
+
 
     def update_destinations(self) -> None:
+        self._init_services()
         for service in self.services:
             try:
                 service.update_sources()
