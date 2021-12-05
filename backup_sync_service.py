@@ -27,6 +27,9 @@ class BackupDestinationService:
         dest_folder_secrets_to_ids = BackupDestinationService._map_folder_secrets_to_folder_ids(self.destination_api)
 
         dest_local_storage = self.destination_api.get_local_storage()
+        if dest_local_storage is None:
+            print('Error', f'cannot access local storage for {self.destination_api.host}')
+            return
         dest_local_storage_change = False
 
         source_username = source_api.get_user_identity().username

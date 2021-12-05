@@ -75,7 +75,10 @@ class ResilioSyncAPI:
 
     def get_local_storage(self) -> resilio_model.LocalStorage:
         # returns str instead of json
-        return resilio_schema.LocalStorageSchema().load(json.loads(self._get_basic_action('localstorage')))
+        value = self._get_basic_action('localstorage')
+        if value != '':
+            return resilio_schema.LocalStorageSchema().load(json.loads(self._get_basic_action('localstorage')))
+        return None
 
     def get_license_agreed(self):
         return self._get_basic_action('licenseagreed')
