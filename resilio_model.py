@@ -122,6 +122,21 @@ class LocalStorageStatusPanel:
         self.show = show
         self.tabs = tabs
 
+class LocalStorageScheduleSettings:
+    def __init__(self,
+                 *,
+                 dlrate: int,
+                 is_dl_unlimit: bool,
+                 is_ul_unlimit: bool,
+                 schedule_type: int,
+                 ulrate: int
+                 ) -> None:
+        self.dlrate = dlrate
+        self.is_dl_unlimit = is_dl_unlimit
+        self.is_ul_unlimit = is_ul_unlimit
+        self.schedule_type = schedule_type
+        self.ulrate = ulrate
+
 class LocalStorage:
     def __init__(self,
                  *,
@@ -133,6 +148,7 @@ class LocalStorage:
                  has_been_pro: typing.Optional[bool] = None,
                  hidden_devices: typing.List[str] = [],
                  status_panel: typing.Optional[LocalStorageStatusPanel] = None,
+                 schedule_settings: typing.Optional[LocalStorageScheduleSettings] = None,
                  tab_index: typing.Optional[str] = None
                  ) -> None:
         self.active_tab = active_tab
@@ -142,4 +158,5 @@ class LocalStorage:
         self.has_been_pro = has_been_pro
         self.hidden_devices = hidden_devices
         self.status_panel = status_panel
+        self.schedule_settings = schedule_settings
         self.tab_index = tab_index
