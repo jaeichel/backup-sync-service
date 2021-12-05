@@ -138,6 +138,18 @@ class LocalStorageStatusPanelSchema(BaseSchema):
         return resilio_model.LocalStorageStatusPanel(**data)
 
 
+class LocalStorageScheduleSettingsSchema(BaseSchema):
+    dlrate = fields.Int(data_key='dlrate')
+    is_dl_unlimit = fields.Bool(data_key='isDlUnlimit')
+    is_ul_unlimit = fields.Bool(data_key='isUlUnlimit')
+    schedule_type = fields.Int(data_key='scheduleType')
+    ulrate = fields.Int(data_key='ulrate')
+    
+    @post_load
+    def make_object(self, data, **kwargs):
+        return resilio_model.LocalStorageScheduleSettings(**data)
+
+
 class LocalStorageSchema(BaseSchema):
     active_tab = fields.Str(data_key='activeTab')
     custom_folder_names = fields.Dict(data_key='customFolderNames', required=False, keys=fields.Str(), values=fields.Str())
@@ -147,6 +159,7 @@ class LocalStorageSchema(BaseSchema):
     has_been_pro = fields.Bool(data_key='hasBeenPro', required=False)
     hidden_devices = fields.List(fields.Str, data_key='hiddenDevices', required=False)
     status_panel = fields.Nested(LocalStorageStatusPanelSchema, data_key='statusPanel', required=False)
+    schedule_settings = fields.Nested(LocalStorageScheduleSettingsSchema, data_key='scheduleSettings', required=False)
     tab_index = fields.Str(data_key='tabIndex', required=False)
 
     @post_load
